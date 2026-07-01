@@ -3,14 +3,14 @@
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from app.serializers import UserResponseSerializer, UserUpdateSerializer
 
 
-class UserUpdateView(RetrieveUpdateAPIView):
+class UserUpdateView(UpdateAPIView):
     """
     Get or update authenticated user profile information.
     """
@@ -21,14 +21,14 @@ class UserUpdateView(RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-    @extend_schema(
-        responses={status.HTTP_200_OK: UserResponseSerializer, status.HTTP_401_UNAUTHORIZED: None},
-        summary="Get current user profile info",
-        description="Retrieves the profile data of the logged in user.",
-        tags=["Users"],
-    )
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # @extend_schema(
+    #     responses={status.HTTP_200_OK: UserResponseSerializer, status.HTTP_401_UNAUTHORIZED: None},
+    #     summary="Get current user profile info",
+    #     description="Retrieves the profile data of the logged in user.",
+    #     tags=["Users"],
+    # )
+    # def get(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     @extend_schema(
         request=UserUpdateSerializer,

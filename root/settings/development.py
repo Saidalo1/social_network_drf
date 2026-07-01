@@ -38,3 +38,20 @@ CACHEOPS = {
     "app.post": {"ops": ("get", "fetch"), "timeout": 60 * 15, "cache_on_save": True},
     "app.comment": {"ops": ("get", "fetch"), "timeout": 60 * 15, "cache_on_save": True},
 }
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
+}
