@@ -8,5 +8,8 @@ echo "Running migrate..."
 python manage.py migrate
 echo "Migrate completed."
 
+echo "Creating demo user if not exists..."
+python manage.py create_demo_user
+
 echo "Starting Django development server..."
 exec python manage.py runserver 0.0.0.0:8000

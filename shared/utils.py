@@ -21,3 +21,10 @@ def get_tokens_for_user(user) -> dict:
     refresh = RefreshToken.for_user(user)
     return {"access_token": str(refresh.access_token), "refresh_token": str(refresh)}
 
+
+def generate_token_string() -> str:
+    """Helper generating string uuid verification tokens."""
+    import uuid
+    return str(uuid.uuid4())
+
+

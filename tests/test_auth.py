@@ -126,3 +126,43 @@ def test_login_validation(client: APIClient):
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "invalid" in response.json()["detail"].lower()
+
+
+def test_users_me_get_and_patch(client: APIClient):
+    """
+    Verifies that the users/me endpoint supports GET to retrieve information
+    and PATCH to update user profile information.
+    """
+    signup_payload = {
+        "email": "profile@gmail.com",
+        "username": "profile_user",
+        "full_name": "Original Name",
+        "password": "password123",
+    }
+    client.post(reverse("auth-register"), data=signup_payload, format="json")
+
+    # Login to get JWT
+    login_res = client.post(
+        reverse("auth-login"), data={"username_or_email": "profile_user", "password": "password123"}, format="json"
+    )
+    token = login_res.json()["access_token"]
+
+    # Set Auth header
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+    # 1. Test GET users/me
+    response = client.get(reverse("users-me"))
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["username"] == "profile_user"
+    assert response.json()["full_name"] == "Original Name"
+
+    # 2. Test PATCH users/me
+    response = client.patch(reverse("users-me"), data={"full_name": "Updated Name"}, format="json")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["full_name"] == "Updated Name"
+
+    # 3. Verify changes persist via GET
+    response = client.get(reverse("users-me"))
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["full_name"] == "Updated Name"
+

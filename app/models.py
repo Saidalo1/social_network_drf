@@ -20,6 +20,7 @@ from simple_history.models import HistoricalRecords
 
 from shared.constants import UserRole
 from shared.django.models import BaseModel, TimeBaseModel
+from shared.utils import generate_token_string
 
 
 class User(AbstractUser):
@@ -46,11 +47,6 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.username} ({self.email})"
-
-
-def generate_token_string() -> str:
-    """Helper generating string uuid verification tokens."""
-    return str(uuid.uuid4())
 
 
 class VerificationToken(TimeBaseModel):

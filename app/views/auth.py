@@ -2,7 +2,7 @@
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -18,7 +18,6 @@ from app.services.users import UserService
 from shared.utils import get_tokens_for_user
 
 
-
 class SignUpView(APIView):
     """
     Register a new user account.
@@ -31,6 +30,7 @@ class SignUpView(APIView):
         responses={status.HTTP_201_CREATED: UserResponseSerializer, status.HTTP_400_BAD_REQUEST: None},
         summary="Register a new user account",
         description="Creates a new unverified user, hashes password using Argon2, and schedules email token.",
+        tags=["Auth"],
     )
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
@@ -57,6 +57,17 @@ class LoginView(APIView):
         responses={status.HTTP_200_OK: TokenResponseSerializer, status.HTTP_400_BAD_REQUEST: None},
         summary="Authenticate credentials and generate JWT tokens",
         description="Validates username/email and password, returning JWT access and refresh tokens.",
+        tags=["Auth"],
+        examples=[
+            OpenApiExample(
+                "Demo Credentials",
+                value={
+                    "username_or_email": "demo",
+                    "password": "demo1234",
+                },
+                request_only=True,
+            )
+        ],
     )
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -87,6 +98,7 @@ class VerifyEmailView(APIView):
         responses={status.HTTP_200_OK: None, status.HTTP_400_BAD_REQUEST: None},
         summary="Confirm email verification token",
         description="Validates the confirmation token and updates is_verified = True.",
+        tags=["Auth"],
     )
     def get(self, request):
         token_str = request.query_params.get("token")
@@ -114,6 +126,7 @@ class MeView(APIView):
         responses={status.HTTP_200_OK: UserResponseSerializer, status.HTTP_401_UNAUTHORIZED: None},
         summary="Retrieve current user details",
         description="Returns detailed profile information for the authenticated user.",
+        tags=["Auth"],
     )
     def get(self, request):
         serializer = UserResponseSerializer(request.user)

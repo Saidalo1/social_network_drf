@@ -7,6 +7,14 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    # Auto-copy .env.example to .env if not present
+    import shutil
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(base_dir, ".env")
+    env_example_path = os.path.join(base_dir, ".env.example")
+    if not os.path.exists(env_path) and os.path.exists(env_example_path):
+        shutil.copy(env_example_path, env_path)
+
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "root.settings.development")
     try:
         from django.core.management import execute_from_command_line

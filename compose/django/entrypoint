@@ -7,6 +7,11 @@ set -o pipefail
 # exits if any of your variables is not set
 set -o nounset
 
+# Auto-copy .env.example if .env is missing
+if [ ! -f .env ] && [ -f .env.example ]; then
+  cp .env.example .env
+fi
+
 # Check for PostgreSQL readiness without using Python to avoid early ssl import
 export PGPASSWORD="${POSTGRES_PASSWORD}"
 
