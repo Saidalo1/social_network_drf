@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+echo "Running migrate..."
+python manage.py migrate
+echo "Migrate completed."
+
+echo "Starting Django development server..."
+exec python manage.py runserver 0.0.0.0:8000

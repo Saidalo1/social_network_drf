@@ -1,0 +1,22 @@
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "C4",  # comprehensions
+]
+ignore = [
+    "B008", # Do not perform function call in argument defaults (standard in DI/DRF)
+    "E501", # Line too long (handled by formatter)
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
